@@ -55,7 +55,8 @@ def get_financial_ledges(db: Session, account_id: UUID) -> OutputFinancialLedges
     data = []
 
     for raw in db_financial_ledge:
-        account_balance = account_balance + raw.income - raw.spending
+        if raw.is_deleted == False:
+            account_balance = account_balance + raw.income - raw.spending
         data.append(raw)
 
     output_financial_ledges = OutputFinancialLedges(
