@@ -29,12 +29,15 @@ def update_financial_ledge(db: Session, financial_ledge_id: UUID, money_keep_dat
                                        FinancialLedge.account_id == account_id).values(
         memo=money_keep_data.memo,
         income=money_keep_data.income,
-        speding=money_keep_data.spending,
+        spending=money_keep_data.spending,
         balance_category=money_keep_data.balance_category,
         category=money_keep_data.category
     )
     db_financial_ledge = db.execute(sql)
     db.commit()
+
+    sql = select(FinancialLedge).where(FinancialLedge.financial_ledge_id == financial_ledge_id)
+    db_financial_ledge = db.scalars(sql).one()
     return db_financial_ledge
 
 
