@@ -18,7 +18,6 @@ class FinancialLedgeBase(BaseModel):
     balance_category: BalanceCategory
     category: Category
     short_url: str | None = None
-    is_delete: bool = False
 
 
 class FinancialLedge(FinancialLedgeBase, TimeStamp):
