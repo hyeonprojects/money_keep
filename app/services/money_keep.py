@@ -12,7 +12,11 @@ from services.account import get_account
 def create_financial_ledge(db: Session, money_keep_data: CreateFinancialLedge, account_id: UUID):
     db_financial_ledge = FinancialLedge(
         account_id=account_id,
-        **money_keep_data
+        memo=money_keep_data.memo,
+        income=money_keep_data.income,
+        spending=money_keep_data.spending,
+        balance_category=money_keep_data.balance_category,
+        category=money_keep_data.category
     )
     db.add(db_financial_ledge)
     db.commit()
@@ -60,7 +64,7 @@ def get_financial_ledges(db: Session, account_id: UUID) -> OutputFinancialLedges
     return output_financial_ledges
 
 
-def copy_money_keep(db: Session, financial_ledge_id: UUID) -> FinancialLedge:
+def copy_money_keep_template(db: Session, financial_ledge_id: UUID) -> FinancialLedge:
     sql = select(FinancialLedge).where(FinancialLedge.financial_ledge_id == financial_ledge_id)
     db_financial_ledge = db.scalars(sql).one()
 
@@ -75,6 +79,15 @@ def copy_money_keep(db: Session, financial_ledge_id: UUID) -> FinancialLedge:
     db.refresh(db_copy_financial_ledge)
 
     return db_copy_financial_ledge
+
+
+def change_delete_money_keep(db: Session, finalcial_ledge_id: UUID):
+    sql = update(FinancialLedge).where(FinancialLedge.financial_ledge_id == finalcial_ledge_id).values(
+        is_delete=True
+    )
+    db_financial_ledge = db.execute(sql)
+    db.commit()
+    return db_financial_ledge
 
 
 def create_short_url():

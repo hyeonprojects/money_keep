@@ -21,7 +21,7 @@ async def register(regsiter_account: CreateAccount, db: Session = Depends(get_db
     """
     회원가입 기능, 이메일과 비밀번호를 입력하면 계정을 생성함.
     :param regsiter_account: email과 password 값
-    :return: dict 형식의 계정 생성 완료값
+    :return: 계정 생성 완료 메세지
     """
     try:
         db_account = create_account(db, regsiter_account)
@@ -66,7 +66,7 @@ async def logout(account_id: UUID = Depends(get_access_token_account), db: Sessi
     """
     access_token 값을 통해서 게정을 찾고 refersh token값을 제거합니다.
     :param account_id: access_token에 있는 계정값
-    :return:
+    :return: 로그아웃 종료 알림
     """
     try:
         db_account = logout_account(db, account_id)
