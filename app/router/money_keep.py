@@ -82,13 +82,13 @@ def delete_money_keep(financial_ledge_id: UUID, account_id: UUID = Depends(get_a
 
 @router.post("/money-keep/copy/{financial_ledge_id}")
 def copy_money_keep(financial_ledge_id: UUID, account_id: UUID = Depends(get_access_token_account), db: Session = Depends(get_db)):
-    try:
-        db_account = get_account(db, account_id)
-        if db_account is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        db_copy_financial_ledge = remove_money_keep(db, financial_ledge_id)
-    except SQLAlchemyError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    # try:
+    db_account = get_account(db, account_id)
+    if db_account is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    db_copy_financial_ledge = copy_money_keep_template(db, financial_ledge_id)
+    # except SQLAlchemyError:
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     return db_copy_financial_ledge
 
 

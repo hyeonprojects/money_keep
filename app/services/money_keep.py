@@ -1,3 +1,4 @@
+import uuid
 from uuid import UUID
 
 from fastapi import HTTPException, status
@@ -71,6 +72,7 @@ def copy_money_keep_template(db: Session, financial_ledge_id: UUID) -> Financial
     db_financial_ledge = db.scalars(sql).one()
 
     db_copy_financial_ledge = FinancialLedge(
+        financial_ledge_id=uuid.uuid4(),
         account_id=db_financial_ledge.account_id,
         memo=db_financial_ledge.memo,
         balance_category=db_financial_ledge.balance_category,
