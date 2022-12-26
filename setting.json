@@ -1,0 +1,14 @@
+{
+  "DB_DEV_USER": "dev",
+  "DB_DEV_USER_PASSWORD": "dev",
+  "DB_USE_USER": "user",
+  "DB_USE_USER_PASSWORD": "user",
+  "DB_HOST": "127.0.0.1",
+  "DB_PORT": "3306",
+  "DB_NAME": "money_keep",
+  "TEST_DB_NAME": "test_money_keep",
+  "TOKEN_SECRET_KEY": "payhere",
+  "TOKEN_ALGORITHM": "HS256",
+  "ACCESS_TOKEN_EXPIRE_HOURS": 3,
+  "REFRESH_TOKEN_EXPIRE_DAYS": 14
+}
