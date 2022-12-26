@@ -20,24 +20,26 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def create_tokens(db: Session, account_id: str) -> dict:
-    refresh_token_expire = datetime.utcnow() + timedelta(days=get_secret("REFRESH_TOKEN_EXPIRE_DAYS"))
+    refresh_token_expire = datetime.utcnow() + timedelta(
+        days=get_secret("REFRESH_TOKEN_EXPIRE_DAYS")
+    )
 
-    refresh_token_data = {
-        "account_id": account_id,
-        "exp": refresh_token_expire
-    }
+    refresh_token_data = {"account_id": account_id, "exp": refresh_token_expire}
 
     access_token = create_access_token(account_id)
-    refresh_token = jwt.encode(refresh_token_data, TOKEN_SECRET_KEY, algorithm=TOKEN_ALGORITHM)
+    refresh_token = jwt.encode(
+        refresh_token_data, TOKEN_SECRET_KEY, algorithm=TOKEN_ALGORITHM
+    )
 
-    sql = update(Account).where(Account.account_id == account_id).values(refresh_token=refresh_token)
+    sql = (
+        update(Account)
+        .where(Account.account_id == account_id)
+        .values(refresh_token=refresh_token)
+    )
     db_account = db.execute(sql)
     db.commit()
 
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token
-    }
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 def create_access_token(account_id: UUID) -> str:
@@ -46,12 +48,13 @@ def create_access_token(account_id: UUID) -> str:
     :param account_id: 계정 id
     :return: access_token
     """
-    access_token_expire = datetime.utcnow() + timedelta(days=get_secret("ACCESS_TOKEN_EXPIRE_HOURS"))
-    access_token_data = {
-        "account_id": str(account_id),
-        "exp": access_token_expire
-    }
-    access_token = jwt.encode(access_token_data, TOKEN_SECRET_KEY, algorithm=TOKEN_ALGORITHM)
+    access_token_expire = datetime.utcnow() + timedelta(
+        days=get_secret("ACCESS_TOKEN_EXPIRE_HOURS")
+    )
+    access_token_data = {"account_id": str(account_id), "exp": access_token_expire}
+    access_token = jwt.encode(
+        access_token_data, TOKEN_SECRET_KEY, algorithm=TOKEN_ALGORITHM
+    )
     return access_token
 
 
@@ -64,7 +67,9 @@ def get_token_payload(token: str) -> dict:
     try:
         payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="토큰에 문제가 있습니다.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="토큰에 문제가 있습니다."
+        )
     return payload
 
 
@@ -91,7 +96,11 @@ def get_access_token_account(access_token: str = Depends(oauth2_scheme)) -> str:
         payload = jwt.decode(access_token, TOKEN_SECRET_KEY, algorithms=TOKEN_ALGORITHM)
         account_id: UUID = payload.get("account_id")
         if account_id is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="계정에 문제가 있습니다")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="계정에 문제가 있습니다"
+            )
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="계정에 문제가 있습니다.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="계정에 문제가 있습니다."
+        )
     return str(account_id)

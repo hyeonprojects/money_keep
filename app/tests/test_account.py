@@ -12,14 +12,8 @@ from fastapi.testclient import TestClient
 
 def test_register(test_app):
     url = "/account/register"
-    body = {
-        "email": "test@gmail.com",
-        "password": "testcode"
-    }
-    response = test_app.post(
-        url=url,
-        json=body
-    )
+    body = {"email": "test@gmail.com", "password": "testcode"}
+    response = test_app.post(url=url, json=body)
     assert response.status_code == 201
 
     # 시간이 되면 DB의 값과 refresh_token값 비교하기
@@ -27,14 +21,8 @@ def test_register(test_app):
 
 def test_login(test_app):
     url = "/account/login"
-    body = {
-        "email": "test@gmail.com",
-        "password": "testcode"
-    }
-    response = test_app.post(
-        url=url,
-        json=body
-    )
+    body = {"email": "test@gmail.com", "password": "testcode"}
+    response = test_app.post(url=url, json=body)
     assert response.status_code == 200
 
     # 시간이 되면 DB의 값과 refresh_token값 비교하기
@@ -45,4 +33,3 @@ def test_logout(test_app):
     pass
 
     # token 값 임시로 생성 및 refresh_token 값 사라진지 확인할 수 있게 코드 작성
-

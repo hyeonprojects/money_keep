@@ -18,6 +18,7 @@ class TimeStamp(BaseModel):
 class Account(AccountBase, TimeStamp):
     refresh_token: str | None
     status: AccountStatus = AccountStatus.user
+
     class Config:
         orm_mode = True
 

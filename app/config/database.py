@@ -9,7 +9,7 @@ SQLALCHEMY_DATABASE_URL = "mysql://{user}:{password}@{host}:{port}/{db_name}".fo
     password=get_secret("DB_DEV_USER_PASSWORD"),
     host=get_secret("DB_HOST"),
     port=get_secret("DB_PORT"),
-    db_name=get_secret("DB_NAME")
+    db_name=get_secret("DB_NAME"),
 )
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True, pool_pre_ping=True)
