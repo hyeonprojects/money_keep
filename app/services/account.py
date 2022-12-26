@@ -39,6 +39,7 @@ def authenticate_account(db: Session, account: LoginAccount):
     if not verify_password(account.password, db_account.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="계정이 없거나 비밀번호가 없습니다.")
 
+
     return db_account
 
 

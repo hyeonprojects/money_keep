@@ -2,7 +2,7 @@ import datetime
 
 from pydantic import BaseModel
 
-from app.models.account import AccountStatus
+from models.account import AccountStatus
 
 
 class AccountBase(BaseModel):

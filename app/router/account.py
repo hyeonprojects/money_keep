@@ -17,16 +17,26 @@ router = APIRouter(
 
 
 @router.post("/register", status_code=201)
-async def register(regsiter_account: CreateAccount, db: Session = Depends(get_db)) -> dict:
+async def register(regsiter_account: CreateAccount, db: Session = Depends(get_db)):
+    """
+    회원가입 기능, 이메일과 비밀번호를 입력하면 계정을 생성함.
+    :param regsiter_account: email과 password 값
+    :return: dict 형식의 계정 생성 완료값
+    """
     try:
         db_account = create_account(db, regsiter_account)
     except SQLAlchemyError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="계정이 생성되지 않았습니다.")
+        raise HTTPException(status_code=status.HTTP_4ti01_UNAUTHORIZED, detail="계정이 생성되지 않았습니다.")
     return {"detail": "계정이 생성 되었습니다."}
 
 
-@router.post("/login", status_code=200)
-def login(login_account: LoginAccount, db: Session = Depends(get_db)) -> OutputToken:
+@router.post("/login", status_code=200,response_model=OutputToken)
+def login(login_account: LoginAccount, db: Session = Depends(get_db)):
+    """
+    로그인 기능, 이메일과 비밀번호 입력시 검증하고,
+    :param login_account: email과 password 값
+    :return: access_token값과 refresh_token 값
+    """
     try:
         db_account = authenticate_account(db, login_account)
         tokens = create_tokens(db, db_account.account_id)
@@ -38,6 +48,11 @@ def login(login_account: LoginAccount, db: Session = Depends(get_db)) -> OutputT
 
 @router.post("/refresh", status_code=200)
 async def refresh_token(token: InputRefreshToken, db: Session = Depends(get_db)):
+    """
+    만료된 access token을 재발급 받기 위해서 refresh token을 받으면 이 값을 비교하여서 access_token을 반환합니다.
+    :param token: refresh_token 값
+    :return: access_token 값
+    """
     try:
         db_account = check_refresh_token(db, token.refresh_token)
         access_token = create_access_token(db_account.account_id)
@@ -48,6 +63,11 @@ async def refresh_token(token: InputRefreshToken, db: Session = Depends(get_db))
 
 @router.get("/logout", status_code=200)
 async def logout(account_id: UUID = Depends(get_access_token_account), db: Session = Depends(get_db)):
+    """
+    access_token 값을 통해서 게정을 찾고 refersh token값을 제거합니다.
+    :param account_id: access_token에 있는 계정값
+    :return:
+    """
     try:
         db_account = logout_account(db, account_id)
     except SQLAlchemyError:

@@ -8,10 +8,10 @@ from config.database import Base
 
 
 class AccountStatus(enum.Enum):
-    withdrawal = 0
-    user = 1
-    pause = 2
-    admin = 11
+    withdrawal = 0  # 회원 탈퇴
+    user = 1  # 일반 사용자
+    pause = 2  # 회원 일시 정지
+    admin = 11  # 관리자
 
 
 class Account(Base):
