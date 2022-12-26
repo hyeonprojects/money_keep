@@ -49,7 +49,6 @@ status
 | balance_category | Enum |  | 돈 카테고리( 돈, 카드, 기타) |
 | category | Enum |  | 사용처 분류(식비, 주거통신, 생활용품, 의복미용, 건강문화, 교육육아, 교통차량, 경조사회비, 세금이자, 용돈기타 |
 | short_url | varchar | nullable | url를 통해서 |
-| is_delete | boolean | default=False | 삭제되었는지 안되었는지 |
 | created_at | datetime |  | 생성날짜 |
 | updated_at | datetime |  | 수정날짜 |
 
