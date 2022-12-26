@@ -16,6 +16,95 @@ ____
 - passlib
 - mysql 5.7
 
+## API 설명
+- account/register POST : email과 password를 입력하고 계정을 생성
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/account/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "payhere@gmail.com",
+    "password": "payhere"
+}'
+```
+
+- account/login POST : email과 password를 입력하고 access token과 refresh token을 발급받습니다.
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/account/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "payhere@gmail.com",
+    "password": "payhere"
+}'
+```
+
+- account/refresh POST : refersh_token을 보내어서 access token을 재발급 받습니다. (예제 토큰입니다.)
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/account/refresh' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiYTM3M2ZiYTAtM2Y2MS00NmNjLTk3NGUtNjczMThjZGI2Y2Q2IiwiZXhwIjoxNjcxOTkzNjg1fQ.H7lF3DCRXbg0aK-dS7BL3z_VFnsouEB589JZngjuEBU' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjczMjczNTc3fQ.Eujcx3WqfQHs6a8s_dK5vyiFTGXpcBlZEcsf002Fbu4"
+}'
+```
+
+- account/logout GET : 로그아웃을 진행합니다.  (에제 토큰입니다.)
+```shell
+curl --location --request GET 'http://127.0.0.1:8000/account/logout' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcxOTk1MDc1fQ.Bc421MUnzFEFn85VPwkDS_a5oIpRpK4pr5a6uAPo-_8'
+```
+
+- money-keep POST : 가계부 생성 합니다.
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/money-keep' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ4MTk0fQ.jc8xYHAKlJEECtO0wP7us_zGk7J5teAaQ5bllhjIMHg' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "memo": "외식먹음",
+    "spending": 20000,
+    "balance_category": 2,
+    "category": 1
+}'
+```
+
+- money-keep GET : 가계부 전체 리스트 및 액수를 계산하여 가져옵니다.
+```shell
+curl --location --request GET 'http://127.0.0.1:8000/money-keep' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ3Nzg2fQ.aePmo71yvZGBbe5NMRneV34Dybil9jVhIgI0NiIxlDE'
+```
+
+- money-keep/{financial_ledge_id} GET : 가게부 리스트 상세 정보를 확인할 수 있습니다.
+```shell
+curl --location --request GET 'http://127.0.0.1:8000/money-keep/ebf42083-7e84-4f6a-aa92-04dc725b6ea8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ4MTk0fQ.jc8xYHAKlJEECtO0wP7us_zGk7J5teAaQ5bllhjIMHg'
+```
+
+- money-keep/{financial_ledge_id} PUT : 가게부 상세 정보를 수정합니다.
+```shell
+curl --location --request PUT 'http://127.0.0.1:8000/money-keep/ebf42083-7e84-4f6a-aa92-04dc725b6ea8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ4MTk0fQ.jc8xYHAKlJEECtO0wP7us_zGk7J5teAaQ5bllhjIMHg' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "memo": "외식",
+    "spending": 350000,
+    "category": 1,
+    "balance_category": 2
+}'
+```
+
+
+- money-keep/{financial_ledge_id} DELETE : 가게부 정보를 삭제합니다.
+```shell
+curl --location --request DELETE 'http://127.0.0.1:8000/money-keep/ebf42083-7e84-4f6a-aa92-04dc725b6ea8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ4MTk0fQ.jc8xYHAKlJEECtO0wP7us_zGk7J5teAaQ5bllhjIMHg'
+```
+
+
+- money-keep/copy/{financial_ledge_id} POST : 가계부 데이터를 설정값을 복사해서 새로 하나 만들어줍니다.
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/money-keep/copy/ebf42083-7e84-4f6a-aa92-04dc725b6ea8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiZThlYWRlNzUtOGRiYy00Y2UzLTgyNjAtODJhMDNhN2ZiODM0IiwiZXhwIjoxNjcyMzQ4MTk0fQ.jc8xYHAKlJEECtO0wP7us_zGk7J5teAaQ5bllhjIMHg'
+```
+
 ## Database 설계
 
 ### account
