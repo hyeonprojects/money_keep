@@ -19,14 +19,14 @@ router = APIRouter(
 
 @router.post("/money-keep", status_code=200)
 def create_money_keep(money_keep_data: CreateFinancialLedge, account_id: UUID = Depends(get_access_token_account), db: Session = Depends(get_db)):
-    # try:
-    db_account = get_account(db, account_id)
-    if db_account is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="")
+    try:
+        db_account = get_account(db, account_id)
+        if db_account is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    db_financial_ledge = create_financial_ledge(db, money_keep_data, account_id)
-    # except SQLAlchemyError:
-    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        db_financial_ledge = create_financial_ledge(db, money_keep_data, account_id)
+    except SQLAlchemyError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     return db_financial_ledge
 
 

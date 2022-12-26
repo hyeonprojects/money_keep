@@ -45,7 +45,6 @@ def get_financial_ledge(db: Session, financial_ledge_id: UUID, account_id: UUID)
 
 
 def get_financial_ledges(db: Session, account_id: UUID) -> OutputFinancialLedges:
-    # 전체 총액도 나오면 좋겠다.
     sql = select(FinancialLedge).where(FinancialLedge.account_id == account_id)
     db_financial_ledge = db.scalars(sql)
 
@@ -53,7 +52,7 @@ def get_financial_ledges(db: Session, account_id: UUID) -> OutputFinancialLedges
     data = []
 
     for raw in db_financial_ledge:
-        account_balance = account_balance + raw.income + raw.spending
+        account_balance = account_balance + raw.income - raw.spending
         data.append(raw)
 
     output_financial_ledges = OutputFinancialLedges(

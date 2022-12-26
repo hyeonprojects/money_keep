@@ -1,5 +1,5 @@
 # DB 생성
-CREATE DATABASE money_keep;
+CREATE DATABASE money_keep DEFAULT CHARACTER SET utf8 collate utf8_general_ci;
 
 # Dev user
 CREATE USER 'dev'@'%' identified by 'dev';
