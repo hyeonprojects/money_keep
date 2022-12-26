@@ -46,7 +46,7 @@ def create_access_token(account_id: UUID) -> str:
     :param account_id: 계정 id
     :return: access_token
     """
-    access_token_expire = datetime.utcnow() + timedelta(minutes=get_secret("ACCESS_TOKEN_EXPIRE_HOURS"))
+    access_token_expire = datetime.utcnow() + timedelta(days=get_secret("ACCESS_TOKEN_EXPIRE_HOURS"))
     access_token_data = {
         "account_id": str(account_id),
         "exp": access_token_expire
