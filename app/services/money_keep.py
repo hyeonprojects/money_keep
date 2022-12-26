@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import HTTPException, status
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.orm import Session
 
 from models.money_keep import FinancialLedge
@@ -55,8 +55,7 @@ def get_financial_ledges(db: Session, account_id: UUID) -> OutputFinancialLedges
     data = []
 
     for raw in db_financial_ledge:
-        if raw.is_delete == False:
-            account_balance = account_balance + raw.income - raw.spending
+        account_balance = account_balance + raw.income - raw.spending
         data.append(raw)
 
     output_financial_ledges = OutputFinancialLedges(
@@ -84,13 +83,11 @@ def copy_money_keep_template(db: Session, financial_ledge_id: UUID) -> Financial
     return db_copy_financial_ledge
 
 
-def change_delete_money_keep(db: Session, finalcial_ledge_id: UUID):
-    sql = update(FinancialLedge).where(FinancialLedge.financial_ledge_id == finalcial_ledge_id).values(
-        is_delete=True
-    )
+def remove_money_keep(db: Session, finalcial_ledge_id: UUID):
+    sql = delete(FinancialLedge).where(FinancialLedge.financial_ledge_id == finalcial_ledge_id)
     db_financial_ledge = db.execute(sql)
     db.commit()
-    return db_financial_ledge
+    return True
 
 
 def create_short_url():

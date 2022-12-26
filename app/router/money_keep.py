@@ -8,7 +8,7 @@ from dependencies import get_db
 from schemas.money_keep import CreateFinancialLedge, OutputFinancialLedges, UpdateFinancialLedge
 from services.account import get_account
 from services.money_keep import create_financial_ledge, get_financial_ledges, get_financial_ledge, \
-    update_financial_ledge, change_delete_money_keep, copy_money_keep_template
+    update_financial_ledge, remove_money_keep, copy_money_keep_template
 from services.token import get_access_token_account
 
 router = APIRouter(
@@ -74,10 +74,10 @@ def delete_money_keep(financial_ledge_id: UUID, account_id: UUID = Depends(get_a
         db_account = get_account(db, account_id)
         if db_account is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        db_financial_ledge_data = change_delete_money_keep(db, financial_ledge_id)
+        db_financial_ledge_data = remove_money_keep(db, financial_ledge_id)
     except SQLAlchemyError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-    return db_financial_ledge_data
+    return {"detail": "가계부 기록이 삭제되었습니다."}
 
 
 @router.post("/money-keep/copy/{financial_ledge_id}")
@@ -86,7 +86,7 @@ def copy_money_keep(financial_ledge_id: UUID, account_id: UUID = Depends(get_acc
         db_account = get_account(db, account_id)
         if db_account is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        db_copy_financial_ledge = change_delete_money_keep(db, financial_ledge_id)
+        db_copy_financial_ledge = remove_money_keep(db, financial_ledge_id)
     except SQLAlchemyError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     return db_copy_financial_ledge
